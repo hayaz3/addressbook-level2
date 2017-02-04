@@ -29,17 +29,28 @@ class Formatter {
     /** Offset required to convert between 1-indexing and 0-indexing.  */
     public static final int DISPLAYED_INDEX_OFFSET = 1;
 
-	public String getUserCommand() {
+    /**
+     * @return formatted prompt msg.
+     */
+	public String getUserCommandPrompt() {
 		
 		return LINE_PREFIX + "Enter command: ";
 		
 	}
 	
+	/**
+     * @param rawInputLine full raw user input line.
+     * @return formatted command line
+     */
 	public String getFullUserCommand(String fullCommand){
 		
 		return "[Command entered:" + fullCommand + "]";
 	}
 
+	/**
+     * @param msg to be shown
+     * @return formatted msg 
+     */
 	public String showToUser(String... message) {
 		
 		String intended = "";
@@ -52,21 +63,35 @@ class Formatter {
 		
 	}
 	
+	/**
+     * @param welcome msg file and version details.
+     * @return formatted welcome msg. 
+     */
 	public String showWelcomeMessage(String version,String storageFilePath) {
 		String storageFileInfo = String.format(MESSAGE_USING_STORAGE_FILE, storageFilePath);
 		return showToUser(DIVIDER, DIVIDER, MESSAGE_WELCOME, version, 
 				MESSAGE_PROGRAM_LAUNCH_ARGS_USAGE, storageFileInfo, DIVIDER);
 	}
 
+	/**
+     * @return formatted GoodBye msg. 
+     */
 	public String getGoodByeMsg() {
 		return showToUser(MESSAGE_GOODBYE, DIVIDER, DIVIDER);
 		
 	}
 
+	/**
+     * @return formatted initial fail msg. 
+     */
 	public String getInitialFailMsg() {
 		return showToUser(MESSAGE_INIT_FAILED, DIVIDER, DIVIDER);
 	}
 
+	/**
+     * @param command result
+     * @return formatted result msg for view 
+     */
 	public String getResultForUser(CommandResult result) {
 		return showToUser(result.feedbackToUser, DIVIDER);
 	}
@@ -145,7 +170,7 @@ public class TextUi {
      * @return command (full line) entered by the user
      */
     public String getUserCommand() {
-    	out.print(format.getUserCommand());
+    	out.print(format.getUserCommandPrompt());
         String fullInputLine = in.nextLine();
 
         // silently consume all ignored lines
@@ -170,11 +195,6 @@ public class TextUi {
     public void showInitFailedMessage() {
     	out.println(format.getInitialFailMsg());
     }
-
-    /** Shows message(s) to the user */
-//    public void showToUser(String... message) {
-//        out.println(format.showToUser(message));
-//    }
 
     /**
      * Shows the result of a command execution to the user. Includes additional formatting to demarcate different
