@@ -85,6 +85,12 @@ public class StorageFile {
     private static boolean isValidPath(Path filePath) {
         return filePath.toString().endsWith(".xml");
     }
+    
+    public void isDeleted() throws StorageOperationException {
+		if(!path.toFile().exists()) throw new StorageOperationException("file was deleted");
+		else
+			return;
+	}
 
     /**
      * Saves all data to this storage file.
@@ -96,6 +102,7 @@ public class StorageFile {
         /* Note: Note the 'try with resource' statement below.
          * More info: https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
          */
+    	isDeleted();
         try (final Writer fileWriter =
                      new BufferedWriter(new FileWriter(path.toFile()))) {
 
@@ -117,7 +124,8 @@ public class StorageFile {
      * @throws StorageOperationException if there were errors reading and/or converting data from file.
      */
     public AddressBook load() throws StorageOperationException {
-        try (final Reader fileReader =
+    	isDeleted();
+    	try (final Reader fileReader =
                      new BufferedReader(new FileReader(path.toFile()))) {
 
             final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
