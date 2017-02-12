@@ -5,7 +5,9 @@ import seedu.addressbook.data.person.UniquePersonList.*;
 import seedu.addressbook.data.tag.UniqueTagList;
 import seedu.addressbook.data.tag.UniqueTagList.*;
 import seedu.addressbook.data.tag.Tag;
+import seedu.addressbook.data.tag.Tagging;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,8 +22,12 @@ import java.util.Set;
  */
 public class AddressBook {
 
-    private final UniquePersonList allPersons;
+    private static final String ACTION_ADD = "ADD";
+	private static final String ACTION_DELETE = "DELETE";
+	private final UniquePersonList allPersons;
     private final UniqueTagList allTags; // can contain tags not attached to any person
+    
+    private final ArrayList<Tagging> allTaggings;
 
     /**
      * Creates an empty address book.
@@ -29,6 +35,7 @@ public class AddressBook {
     public AddressBook() {
         allPersons = new UniquePersonList();
         allTags = new UniqueTagList();
+        allTaggings = new ArrayList<Tagging>();
     }
 
     /**
@@ -41,6 +48,7 @@ public class AddressBook {
     public AddressBook(UniquePersonList persons, UniqueTagList tags) {
         this.allPersons = new UniquePersonList(persons);
         this.allTags = new UniqueTagList(tags);
+        allTaggings = new ArrayList<Tagging>();
         for (Person p : allPersons) {
             syncTagsWithMasterList(p);
         }
@@ -88,6 +96,14 @@ public class AddressBook {
      */
     public void addTag(Tag toAdd) throws DuplicateTagException {
         allTags.add(toAdd);
+    }
+    
+    public void StatusOfTagAdd(Person p, Tag t) {
+    	allTaggings.add(new Tagging(p, t, ACTION_ADD));
+    }
+    
+    public void statusOfTagDelete(Person p, Tag t) {
+    	allTaggings.add(new Tagging(p, t, ACTION_DELETE));
     }
 
     /**
@@ -150,5 +166,14 @@ public class AddressBook {
                 || (other instanceof AddressBook // instanceof handles nulls
                         && this.allPersons.equals(((AddressBook) other).allPersons)
                         && this.allTags.equals(((AddressBook) other).allTags));
+    }
+    
+    public String printAllTaggings(){
+    	StringBuilder sb = new StringBuilder();
+    	for(Tagging t: allTaggings) {
+    		sb.append(t.toString() + "\n");
+    	}
+    	
+    	return sb.toString();
     }
 }
